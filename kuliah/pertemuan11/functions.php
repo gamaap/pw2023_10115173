@@ -64,3 +64,15 @@ function ubah($data)
   mysqli_error($conn);
   return mysqli_affected_rows($conn);
 }
+
+function cari($keyword)
+{
+  $query = "SELECT * FROM mahasiswa 
+  WHERE 
+  nama LIKE '%$keyword%' OR
+  nim LIKE '%$keyword%' OR
+  email LIKE '%$keyword%' OR
+  jurusan LIKE '%$keyword%'";
+
+  return query($query);
+}
