@@ -83,15 +83,71 @@ function login($data)
   $username = htmlspecialchars($data["username"]);
   $password = htmlspecialchars($data["password"]);
 
-  if (query("SELECT * FROM user WHERE username = '$username' && password = '$password'")) {
-    // Set session
-    $_SESSION['login'] = true;
-    header("Location: index.php");
-    exit;
-  } else {
-    return [
-      'error' => true,
-      'pesan' => 'Username / Password salah'
-    ];
+  // cek username
+  if ($user = query("SELECT * FROM user WHERE username = '$username'")[0]) {
+    // cek password
+    if (password_verify($password, $user["password"])) {
+      // Set session
+      $_SESSION['login'] = true;
+      header("Location: index.php");
+      exit;
+    }
   }
+  return [
+    'error' => true,
+    'pesan' => 'Username / Password salah'
+  ];
+}
+
+function registrasi($data)
+{
+  $conn = connection();
+
+  $username = htmlspecialchars(strtolower($data["username"]));
+  $password = mysqli_real_escape_string($conn, $data["password"]);
+  $confirmPassword = mysqli_real_escape_string($conn, $data["confirm-password"]);
+
+  // jika username / password kosong
+  if (empty($username) || empty($password) || empty($confirmPassword)) {
+    echo "<script>
+            alert('username / password tidak boleh kosong!');
+            document.location.href = 'registrasi.php';
+        </script>";
+    return false;
+  }
+
+  // jika username sudah terdaftar di database
+  if (query("SELECT * FROM user WHERE username = '$username'")) {
+    echo "<script>
+              alert('username sudah terdaftar!');
+              document.location.href = 'registrasi.php';
+          </script>";
+    return false;
+  }
+
+  // jika password dan konfirmasi password tidak sesuai
+  if ($password !== $confirmPassword) {
+    echo "<script>
+              alert('password dan konfirmasi password tidak sesuai!');
+              document.location.href = 'registrasi.php';
+          </script>";
+    return false;
+  }
+
+  // jika password panjangnya dibawah 8 digit
+  if (strlen($password) < 8) {
+    echo "<script>
+              alert('panjang password minimal 8 karakter!');
+              document.location.href = 'registrasi.php';
+          </script>";
+    return false;
+  }
+
+  // jika username dan password benar
+  $passwordBaru = password_hash($password, PASSWORD_DEFAULT);
+
+  // insert ke table user
+  $query = "INSERT INTO user VALUES (null, '$username', '$passwordBaru')";
+  mysqli_query($conn, $query) or die(mysqli_error($conn));
+  return mysqli_affected_rows($conn);
 }

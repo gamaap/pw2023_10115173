@@ -31,12 +31,13 @@ if (isset($_POST["submit"])) {
     <fieldset style="width: 30%">
       <legend>Silahkan melakukan Login</legend>
       <label for="username">Username</label><br>
-      <input type="text" name="username" id="username" size="30" required><br>
+      <input type="text" name="username" id="username" size="30" autofocus autocomplete="off" required><br>
       <label for="password">Password</label><br>
       <input type="password" name="password" id="password" size="30" required><br>
       <input type="checkbox" name="remember" id="remember">
       <label for="remember">Remember me</label><br><br>
       <button type="submit" name="submit">Login</button>
+      <a href="registrasi.php">Tambah User</a>
     </fieldset>
   </form>
 </body>
