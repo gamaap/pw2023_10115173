@@ -22,4 +22,17 @@ keyword.addEventListener('keyup', function() {
   fetch('ajax/ajax_cari.php?keyword=' + keyword.value)
     .then((response) => response.text())
     .then((response) => container.innerHTML = response)
-})
+});
+
+// preview image untuk tambah dan ubah
+function previewImage() {
+  const gambar = document.querySelector('#gambar');
+  const imgPrev = document.querySelector('#img-preview');
+
+  const oFReader = new FileReader();
+  oFReader.readAsDataURL(gambar.files[0]);
+
+  oFReader.onload = function(oFREvent) {
+    imgPrev.src = oFREvent.target.result;
+  }
+}

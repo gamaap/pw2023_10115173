@@ -27,11 +27,7 @@ function upload()
 
   // jika tidak ada file yang di upload
   if ($error == 4) {
-    echo "<script>
-            alert('Gambar belum di upload!');
-            document.location.href = 'tambah.php';
-        </script>";
-    return false;
+    return 'allen.jpg';
   }
 
   // cek ekstensi gambar
@@ -41,7 +37,6 @@ function upload()
   if (!in_array($ekstensi, $allowed)) {
     echo "<script>
             alert('Pilih hanya gambar!');
-            document.location.href = 'tambah.php';
         </script>";
     return false;
   }
@@ -50,7 +45,6 @@ function upload()
   if ($tipe_file != 'image/jpeg' && $tipe_file != 'image/png') {
     echo "<script>
             alert('Pilih hanya gambar!');
-            document.location.href = 'tambah.php';
         </script>";
     return false;
   }
@@ -59,7 +53,6 @@ function upload()
   if ($ukuran_file > 2000000) {
     echo "<script>
             alert('Ukuran file terlalu besar! Max 2MB');
-            document.location.href = 'tambah.php';
         </script>";
     return false;
   }
@@ -96,6 +89,13 @@ function tambah($data)
 function hapus($id)
 {
   $conn = connection();
+
+  // menghapus gambar di folder img
+  $mhs = query("SELECT * FROM mahasiswa WHERE id = $id")[0];
+  if ($mhs["gambar"] != 'allen.jpg') {
+    unlink('img/' . $mhs["gambar"]);
+  }
+
   mysqli_query($conn, "DELETE FROM mahasiswa WHERE id = $id") or die(mysqli_error($conn));
   return mysqli_affected_rows($conn);
 }
@@ -109,7 +109,13 @@ function ubah($data)
   $nama = htmlspecialchars($data["nama"]);
   $email = htmlspecialchars($data["email"]);
   $jurusan = htmlspecialchars($data["jurusan"]);
-  $gambar = htmlspecialchars($data["gambar"]);
+  $gambar_lama = htmlspecialchars($data["gambar_lama"]);
+
+  $gambar = upload();
+  if (!$gambar) return false;
+
+  // jika user tidak mengupload gambar
+  if ($gambar == 'allen.jpg') $gambar = $gambar_lama;
 
   $query = "UPDATE mahasiswa SET 
               nim = '$nim',

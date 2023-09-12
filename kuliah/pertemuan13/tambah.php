@@ -45,10 +45,12 @@ if (isset($_POST["submit"])) {
       <label for="jurusan">Jurusan</label><br>
       <input type="text" name="jurusan" id="jurusan" size="40" required autocomplete="off"><br>
       <label for="gambar">Gambar</label><br>
-      <input type="file" name="gambar" id="gambar"><br><br>
+      <input type="file" name="gambar" id="gambar" onchange="previewImage()"><br><br>
+      <img src="img/allen.jpg" alt="Default Photo" id="img-preview" width="50" style="display: block;"><br>
       <button type="submit" name="submit">Tambah</button>
     </fieldset>
   </form>
+  <script src="js/script.js"></script>
 </body>
 
 </html>

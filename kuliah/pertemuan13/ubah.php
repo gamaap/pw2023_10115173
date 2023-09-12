@@ -43,7 +43,7 @@ if (isset($_POST["submit"])) {
 
 <body>
   <h3>Ubah Data Mahasiswa</h3>
-  <form action="" method="post">
+  <form action="" method="post" enctype="multipart/form-data">
     <fieldset style="width: 30%">
       <legend>Form Ubah</legend>
       <input type="hidden" name="id" id="id" value="<?= $mhs["id"]; ?>">
@@ -56,10 +56,13 @@ if (isset($_POST["submit"])) {
       <label for="jurusan">Jurusan</label><br>
       <input type="text" name="jurusan" id="jurusan" size="40" value="<?= $mhs["jurusan"]; ?>" required autocomplete="off"><br>
       <label for="gambar">Gambar</label><br>
-      <input type="text" name="gambar" id="gambar" value="<?= $mhs["gambar"]; ?>"><br><br>
+      <input type="hidden" name="gambar_lama" id="gambar_lama" value="<?= $mhs["gambar"]; ?>">
+      <input type="file" name="gambar" id="gambar" onchange="previewImage()"><br><br>
+      <img src="img/<?= $mhs["gambar"]; ?>" alt="Default Photo" id="img-preview" width="50" style="display: block;"><br>
       <button type="submit" name="submit">Ubah</button>
     </fieldset>
   </form>
+  <script src="js/script.js"></script>
 </body>
 
 </html>
