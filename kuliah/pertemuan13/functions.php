@@ -17,6 +17,62 @@ function query($query)
   return $rows;
 }
 
+function upload()
+{
+  $nama_file = $_FILES['gambar']['name'];
+  $tipe_file = $_FILES['gambar']['type'];
+  $ukuran_file = $_FILES['gambar']['size'];
+  $error = $_FILES['gambar']['error'];
+  $tmp_file = $_FILES['gambar']['tmp_name'];
+
+  // jika tidak ada file yang di upload
+  if ($error == 4) {
+    echo "<script>
+            alert('Gambar belum di upload!');
+            document.location.href = 'tambah.php';
+        </script>";
+    return false;
+  }
+
+  // cek ekstensi gambar
+  $allowed = ['jpg', 'png', 'jpeg'];
+  $ekstensi = explode('.', $nama_file);
+  $ekstensi = strtolower(end($ekstensi));
+  if (!in_array($ekstensi, $allowed)) {
+    echo "<script>
+            alert('Pilih hanya gambar!');
+            document.location.href = 'tambah.php';
+        </script>";
+    return false;
+  }
+
+  // cek tipe file
+  if ($tipe_file != 'image/jpeg' && $tipe_file != 'image/png') {
+    echo "<script>
+            alert('Pilih hanya gambar!');
+            document.location.href = 'tambah.php';
+        </script>";
+    return false;
+  }
+
+  // cek ukuran gambar (max 2MB = 2000000)
+  if ($ukuran_file > 2000000) {
+    echo "<script>
+            alert('Ukuran file terlalu besar! Max 2MB');
+            document.location.href = 'tambah.php';
+        </script>";
+    return false;
+  }
+
+  // lolos pengecekan, upload file
+  $nama_fileBaru = uniqid();
+  $nama_fileBaru .= '.';
+  $nama_fileBaru .= $ekstensi;
+  move_uploaded_file($tmp_file, 'img/' . $nama_fileBaru);
+
+  return $nama_fileBaru;
+}
+
 function tambah($data)
 {
   $conn = connection();
@@ -25,7 +81,10 @@ function tambah($data)
   $nama = htmlspecialchars($data["nama"]);
   $email = htmlspecialchars($data["email"]);
   $jurusan = htmlspecialchars($data["jurusan"]);
-  $gambar = htmlspecialchars($data["gambar"]);
+
+  // upload gambar
+  $gambar = upload();
+  if (!$gambar) return false;
 
   $query = "INSERT INTO mahasiswa VALUES (NULL, '$nama', '$nim', '$email', '$jurusan', '$gambar')";
   mysqli_query($conn, $query) or die(mysqli_error($conn));

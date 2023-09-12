@@ -33,7 +33,7 @@ if (isset($_POST["submit"])) {
 
 <body>
   <h3>Tambah Data Mahasiswa</h3>
-  <form action="" method="post">
+  <form action="" method="post" enctype="multipart/form-data">
     <fieldset style="width: 30%">
       <legend>Form Tambah</legend>
       <label for="nim">NIM</label><br>
@@ -45,7 +45,7 @@ if (isset($_POST["submit"])) {
       <label for="jurusan">Jurusan</label><br>
       <input type="text" name="jurusan" id="jurusan" size="40" required autocomplete="off"><br>
       <label for="gambar">Gambar</label><br>
-      <input type="text" name="gambar" id="gambar"><br><br>
+      <input type="file" name="gambar" id="gambar"><br><br>
       <button type="submit" name="submit">Tambah</button>
     </fieldset>
   </form>
